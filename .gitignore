@@ -71,3 +71,44 @@ htmlcov/
 # Local settings
 settings.local.py
 
+# Compiled Python files
+*.pyc
+*.pyo
+*.pyd
+
+# Editors and temp files
+*~
+*.swp
+.ropeproject/
+.history
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Coverage and reports
+coverage.xml
+coverage-html/
+nosetests.xml
+
+# Celery
+celerybeat-schedule
+
+# dotenv files sometimes with other names
+env.local
+local.env
+
+
+# Frontend: ignore node_modules and build outputs
+front/node_modules/
+front/dist/
+front/build/
+front/.env
+front/.env.*
+front/npm-debug.log*
+front/yarn-debug.log*
+front/yarn-error.log*
+front/package-lock.json
+front/yarn.lock
+
+

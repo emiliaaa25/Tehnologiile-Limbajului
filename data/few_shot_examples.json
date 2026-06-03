@@ -1,0 +1,304 @@
+[
+    {
+        "review_id": "GM_0001",
+        "group": "positive",
+        "venue": "Attitude Fitness & Wellness Iasi",
+        "venue_type": "fitness+pilates",
+        "rating_stars": 5,
+        "review_text": "Atmosfera și energie maxima!Felicitari!",
+        "aspects": [
+            {
+                "aspect": "Atmosfera",
+                "sentiment": "Positive"
+            }
+        ]
+    },
+    {
+        "review_id": "GM_0004",
+        "group": "positive",
+        "venue": "Attitude Fitness & Wellness Iasi",
+        "venue_type": "fitness+pilates",
+        "rating_stars": 5,
+        "review_text": "Recomand cu mult caldura acest loc. Bravo echipa Attitude pentru tot ce faceti!",
+        "aspects": [
+            {
+                "aspect": "Trainers / Staff",
+                "sentiment": "Positive"
+            },
+            {
+                "aspect": "Facilities / Cleanliness",
+                "sentiment": "Positive"
+            }
+        ]
+    },
+    {
+        "review_id": "GM_0005",
+        "group": "positive",
+        "venue": "Attitude Fitness & Wellness Iasi",
+        "venue_type": "fitness+pilates",
+        "rating_stars": 5,
+        "review_text": "O sală cochetă, curată și foarte bine echipată – ideală pentru cei care vor rezultate reale într-un mediu plăcut. Antrenorii sunt dedicați, profesioniști și știu exact cum să te motiveze să-ți atingi obiectivele. Aparatura este modernă, de ultimă generație, iar atmosfera te face să revii cu drag. Un loc unde te simți bine și evoluezi constant. Recomand cu încredere",
+        "aspects": [
+            {
+                "aspect": "Trainers / Staff",
+                "sentiment": "Positive"
+            },
+            {
+                "aspect": "Equipment",
+                "sentiment": "Positive"
+            },
+            {
+                "aspect": "Facilities / Cleanliness",
+                "sentiment": "Positive"
+            },
+            {
+                "aspect": "Atmosfera",
+                "sentiment": "Positive"
+            }
+        ]
+    },
+    {
+        "review_id": "GM_0010",
+        "group": "positive",
+        "venue": "Stay Fit Gym Pacurari Iasi",
+        "venue_type": "fitness+pilates",
+        "rating_stars": 5,
+        "review_text": "Mă bucur super mult că s-a deschis Stay Fit în Păcurari, deoarece este foarte mare, cu multe aparate. sala este foarte curată și este o experiență foarte frumoasă. Mă bucur să merg în continuare aici.",
+        "aspects": [
+            {
+                "aspect": "Equipment",
+                "sentiment": "Positive"
+            },
+            {
+                "aspect": "Facilities / Cleanliness",
+                "sentiment": "Positive"
+            }
+        ]
+    },
+    {
+        "review_id": "GM_0026",
+        "group": "positive",
+        "venue": "The Rock Gym Iasi",
+        "venue_type": "fitness",
+        "rating_stars": 5,
+        "review_text": "Sala de sport este excelentă! Personalul este amabil și dedicat, iar aparatele sunt de ultimă generație și bine întreținute. Recomand cu încredere!",
+        "aspects": [
+            {
+                "aspect": "Trainers / Staff",
+                "sentiment": "Positive"
+            },
+            {
+                "aspect": "Equipment",
+                "sentiment": "Positive"
+            }
+        ]
+    },
+    {
+        "review_id": "GM_0016",
+        "group": "negative",
+        "venue": "Stay Fit Gym Iulius Mall Iasi",
+        "venue_type": "fitness",
+        "rating_stars": 2,
+        "review_text": "Aparatul de impins la piept e stricat de ceva timp si nu s-a rezolvat. Daca vrei sa faci banda sau bicicleta iti bate soarele in ochi de nu vezi nimic si chiar si asa la toata sala doar doua biciclete din care una foarte proasta. Unul din antrenori mi-a zis pe ton arogant cand am vrut sa iau aparatul de umeri (pe care nu era vreun prosop) ca ei sunt trei si pot sa astept pana ma plictisesc dupa ei daca vreau. De unde aroganta asta fata de clienti? Cand o sa se schimbe lucrurile o sa schimb recenzia,",
+        "aspects": [
+            {
+                "aspect": "Equipment",
+                "sentiment": "Negative"
+            },
+            {
+                "aspect": "Trainers / Staff",
+                "sentiment": "Negative"
+            },
+            {
+                "aspect": "Facilities / Cleanliness",
+                "sentiment": "Negative"
+            },
+            {
+                "aspect": "Crowding",
+                "sentiment": "Negative"
+            }
+        ]
+    },
+    {
+        "review_id": "GM_0021",
+        "group": "negative",
+        "venue": "Stay Fit Gym Iulius Mall Iasi",
+        "venue_type": "fitness",
+        "rating_stars": 2,
+        "review_text": "Ar fi de mare ajutor daca am putea vedea in aplicatie cat de aglomerata este sala, cati membri si au facut checkin in ultima ora, sa pot sa mi fac o idee daca e foarte aglomerat sau pot veni la sala sa mi pot face antrenamentul fara sa fiu frustrata ca nu gasesc niciun echipament/ aparat disponibil.",
+        "aspects": [
+            {
+                "aspect": "Trainers / Staff",
+                "sentiment": "Negative"
+            },
+            {
+                "aspect": "Equipment",
+                "sentiment": "Negative"
+            },
+            {
+                "aspect": "Crowding",
+                "sentiment": "Negative"
+            }
+        ]
+    },
+    {
+        "review_id": "GM_0028",
+        "group": "negative",
+        "venue": "The Rock Gym Iasi",
+        "venue_type": "fitness",
+        "rating_stars": 2,
+        "review_text": "The Rock Gym – sală de top, dar unii vin să facă TikTok, nu mușchi 😆\nSala e mare, aerisită, curată, plină de aparate noi  –vestiarul, baia, totul arată impecabil. Din punct de vedere al dotărilor, Rock Gym e de nota 100.\nSingurul «antrenament» care strică atmosfera vine de la câțiva «sportivi» care se antrenează mai mult la scroll decât la împins greutăți. Nu e vorba de aparatele grele, ci de cele simple, unde greutatea se schimbă cu două degete – dar ei tot reușesc să le ocupe 30 de minute.\nAi terminat seria? Ridică-te, mișcă-ți picioarele, nu dormi pe aparat! 😄\nÎn rest, o sală excelentă – recomand cu drag celor care chiar vin să facă sport!\n👍💪✨️",
+        "aspects": [
+            {
+                "aspect": "Equipment",
+                "sentiment": "Negative"
+            },
+            {
+                "aspect": "Facilities / Cleanliness",
+                "sentiment": "Negative"
+            },
+            {
+                "aspect": "Atmosphere",
+                "sentiment": "Negative"
+            },
+            {
+                "aspect": "Crowding",
+                "sentiment": "Negative"
+            }
+        ]
+    },
+    {
+        "review_id": "GM_0029",
+        "group": "negative",
+        "venue": "The Rock Gym Iasi",
+        "venue_type": "fitness",
+        "rating_stars": 3,
+        "review_text": "Bună ziua,\nÎn ultima perioadă am observat cu dezamăgire că vestiarul bărbătesc este din ce în ce mai murdar. Deși botoșeii de protecție sunt puși la dispoziție de ceva vreme, nu toată lumea îi folosește.\nÎntr-una dintre zile am văzut urme de noroi chiar și în sala de antrenament, la etaj, ceea ce nu ar trebui să se întâmple.\nÎmi amintesc că la The Rock Gym de pe strada Otilia Cazimir exista obiceiul ca oamenii să se descalțe la intrarea în sală, iar acest lucru ajuta mult la păstrarea curățeniei. Poate ar fi util să reveniți la astfel de practici, dacă nu se poate educa altfel publicul.\nConsider că ar trebui impuse reguli mai stricte, de exemplu: să nu fie permis accesul fără botoșei de protecție.\nVă mulțumesc pentru înțelegere și sper să se găsească o soluție.",
+        "aspects": [
+            {
+                "aspect": "Facilities / Cleanliness",
+                "sentiment": "Negative"
+            },
+            {
+                "aspect": "Crowding",
+                "sentiment": "Negative"
+            }
+        ]
+    },
+    {
+        "review_id": "GM_0019",
+        "group": "negative",
+        "venue": "Stay Fit Gym Iulius Mall Iasi",
+        "venue_type": "fitness",
+        "rating_stars": 3,
+        "review_text": "As da cu drag 5 stele insa efectiv te suge de viata zgomotul, vreau sa merg la sala, nu la discoteca. De ce mai cereti parerea daca va stergeti cu ea la fund? Vrem muzica mai incet!\nEdit: in sfarsit dupa luni e muzica la un volum decent, multumesc",
+        "aspects": [
+            {
+                "aspect": "Atmosphere",
+                "sentiment": "Negative"
+            }
+        ]
+    },
+    {
+        "review_id": "GM_0017",
+        "group": "mixed",
+        "venue": "Stay Fit Gym Iulius Mall Iasi",
+        "venue_type": "fitness",
+        "rating_stars": 3,
+        "review_text": "Dotările sălii sunt bune (aparate moderne, accesorii diverse, vestiare cu produse de îngrijire la femei)\nMinusuri: spatiul foarte mic; personal ma deranjează cand vin grupuri de sportivi cu antrenor cu tot- sunt foooooarte gălăgioși și ocupă toată zona de funcțional training, iar la plecare bineînțeles ca ocupă tot vestiarul 👍 cluburile sportive ar trebui să se antreneze în altă parte.",
+        "aspects": [
+            {
+                "aspect": "Equipment",
+                "sentiment": "Positive"
+            },
+            {
+                "aspect": "Facilities / Cleanliness",
+                "sentiment": "Positive"
+            },
+            {
+                "aspect": "Crowding",
+                "sentiment": "Negative"
+            }
+        ]
+    },
+    {
+        "review_id": "GM_0020",
+        "group": "mixed",
+        "venue": "Stay Fit Gym Iulius Mall Iasi",
+        "venue_type": "fitness",
+        "rating_stars": 4,
+        "review_text": "Edit: Acum nu mai e cald in sala, si nici aglomerat nu mai este seara cand m-am dus. Vestiarul este mic, dar altfel sala in sine e buna. Acum pot recomanda sala\n\nReview-ul original: Sala in sine este buna, dar din pacate aerul conditionat nu functioneaza dupa 9 seara, cand este cel mai aglomerat la sala, si devine prea cald sa stai inauntru. Plus ca se simte miros de transpiratie, in special in vestiar, cel mai probabil ca nu merge aerul conditionat.\n\nIn afara de aceste probleme care se pot rezolva, e totusi aglomerat seara pana la 10. Deocamdata nu o sa merg la aceasta sala din aceste cauze, si nu pot recomanda.",
+        "aspects": [
+            {
+                "aspect": "Facilities / Cleanliness",
+                "sentiment": "Positive"
+            },
+            {
+                "aspect": "Crowding",
+                "sentiment": "Negative"
+            },
+            {
+                "aspect": "Atmosphere",
+                "sentiment": "Negative"
+            }
+        ]
+    },
+    {
+        "review_id": "GM_0022",
+        "group": "mixed",
+        "venue": "Stay Fit Gym Iulius Mall Iasi",
+        "venue_type": "fitness",
+        "rating_stars": 4,
+        "review_text": "Sala asta chiar are vibe-ul potrivit! Muzică bună, oameni faini și aparate pentru toate tipurile de antrenament. E genul de loc unde vii o dată și tot revii.",
+        "aspects": [
+            {
+                "aspect": "Atmosphere",
+                "sentiment": "Positive"
+            },
+            {
+                "aspect": "Equipment",
+                "sentiment": "Positive"
+            }
+        ]
+    },
+    {
+        "review_id": "GM_0024",
+        "group": "mixed",
+        "venue": "The Rock Gym Copou",
+        "venue_type": "fitness",
+        "rating_stars": 5,
+        "review_text": "Pe scurt, The Rock Gym Copou e mai mult decât o sală: e o comunitate care te primește, te susține și te ajută să crești frumos. Mă bucur că fac parte din echipa asta și abia aștept să te văd la antrenament. 💪🤍",
+        "aspects": [
+            {
+                "aspect": "Trainers / Staff",
+                "sentiment": "Positive"
+            },
+            {
+                "aspect": "Atmosphere",
+                "sentiment": "Positive"
+            },
+            {
+                "aspect": "Crowding",
+                "sentiment": "Negative"
+            }
+        ]
+    },
+    {
+        "review_id": "GM_0025",
+        "group": "mixed",
+        "venue": "The Rock Gym Iasi",
+        "venue_type": "fitness",
+        "rating_stars": 4,
+        "review_text": "Initial am ales sala datorită locației foarte bune, dar am ramas aici datorita comunitatii care e foarte primitoare si a atmosferei faine de aici!! Recomand oricui din Iasi sa vina la TheRock :)",
+        "aspects": [
+            {
+                "aspect": "Atmosphere",
+                "sentiment": "Positive"
+            },
+            {
+                "aspect": "Trainers / Staff",
+                "sentiment": "Positive"
+            }
+        ]
+    }
+]

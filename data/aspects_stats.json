@@ -1,0 +1,72 @@
+[
+    {
+        "aspect": "atmosfera",
+        "pos": 410,
+        "neg": 3,
+        "neu": 19,
+        "total": 432,
+        "pos_pct": 95,
+        "neg_pct": 1,
+        "neu_pct": 4
+    },
+    {
+        "aspect": "aglomerare",
+        "pos": 1,
+        "neg": 120,
+        "neu": 101,
+        "total": 222,
+        "pos_pct": 0,
+        "neg_pct": 54,
+        "neu_pct": 45
+    },
+    {
+        "aspect": "echipamente",
+        "pos": 599,
+        "neg": 39,
+        "neu": 24,
+        "total": 662,
+        "pos_pct": 90,
+        "neg_pct": 6,
+        "neu_pct": 4
+    },
+    {
+        "aspect": "facilitati_curatenie",
+        "pos": 642,
+        "neg": 71,
+        "neu": 55,
+        "total": 768,
+        "pos_pct": 84,
+        "neg_pct": 9,
+        "neu_pct": 7
+    },
+    {
+        "aspect": "pret_valoare",
+        "pos": 129,
+        "neg": 25,
+        "neu": 33,
+        "total": 187,
+        "pos_pct": 69,
+        "neg_pct": 13,
+        "neu_pct": 18
+    },
+    {
+        "aspect": "program_antrenamente",
+        "pos": 653,
+        "neg": 52,
+        "neu": 35,
+        "total": 740,
+        "pos_pct": 88,
+        "neg_pct": 7,
+        "neu_pct": 5
+    },
+    {
+        "aspect": "antrenori",
+        "pos": 390,
+        "neg": 22,
+        "neu": 13,
+        "total": 425,
+        "pos_pct": 92,
+        "neg_pct": 5,
+        "neu_pct": 3
+    }
+]

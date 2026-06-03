@@ -1,0 +1,37 @@
+[
+  {
+    "aspect": "Trainer",
+    "value": 90,
+    "note": "Calitatea îndrumării"
+  },
+  {
+    "aspect": "Atmosphere",
+    "value": 83,
+    "note": "Experiența din sală"
+  },
+  {
+    "aspect": "Equipment",
+    "value": 88,
+    "note": "Aparate și dotări"
+  },
+  {
+    "aspect": "Energy",
+    "value": 85,
+    "note": "Nivel de energie"
+  },
+  {
+    "aspect": "Guidance",
+    "value": 79,
+    "note": "Direcție și suport"
+  },
+  {
+    "aspect": "Community",
+    "value": 76,
+    "note": "Atmosferă socială"
+  },
+  {
+    "aspect": "Negative",
+    "value": 22,
+    "note": "Probleme și frustrări"
+  }
+]

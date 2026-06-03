@@ -1,267 +1,101 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
-const MOCK_LATENCY_MS = 850
-const MOCK_TIMEOUT_MS = 2500
+const API_URL = 'http://localhost:8000'
 
-const mockStats = [
-  { aspect: 'Trainer', value: 90, note: 'Calitatea îndrumării' },
-  { aspect: 'Atmosferă', value: 83, note: 'Experiența din sală' },
-  { aspect: 'Echipamente', value: 88, note: 'Aparate și dotări' },
-  { aspect: 'Energie', value: 85, note: 'Nivel de energie' },
-  { aspect: 'Ghidare', value: 79, note: 'Direcție și suport' },
-  { aspect: 'Comunitate', value: 76, note: 'Atmosferă socială' },
-]
-
-const aspectDefinitions = [
-  {
-    key: 'trainer',
-    label: 'Trainer',
-    tokens: ['trainer', 'antrenor', 'coach', 'instruc'],
-    positive: ['implicat', 'clar', 'răbdător', 'profesionist', 'ajută', 'motivant'],
-    negative: ['absent', 'nepoliticos', 'dezinteresat', 'confuz', 'slab'],
-  },
-  {
-    key: 'atmosphere',
-    label: 'Atmosferă',
-    tokens: ['atmosfer', 'ambient', 'vibe', 'ambiant'],
-    positive: ['prietenoasă', 'caldă', 'plăcută', 'relaxată', 'motivantă'],
-    negative: ['rece', 'tensionată', 'agitată', 'obosită', 'neplăcută'],
-  },
-  {
-    key: 'equipment',
-    label: 'Echipamente',
-    tokens: ['echipament', 'aparat', 'ganter', 'halter', 'benzi'],
-    positive: ['noi', 'curate', 'moderne', 'variate', 'complete'],
-    negative: ['vechi', 'stricate', 'lipse', 'defecte', 'insuficiente'],
-  },
-  {
-    key: 'energy',
-    label: 'Energie',
-    tokens: ['energie', 'energic', 'motivant', 'intens', 'vital'],
-    positive: ['energică', 'dinamică', 'motivantă', 'activă', 'bună'],
-    negative: ['lipsă', 'obosită', 'scăzută', 'anemică', 'leneșă'],
-  },
-  {
-    key: 'guidance',
-    label: 'Ghidare',
-    tokens: ['ghidare', 'îndrumare', 'indrumare', 'suport'],
-    positive: ['clară', 'utilă', 'structurată', 'sigură', 'bună'],
-    negative: ['neclară', 'slabă', 'confuză', 'haotică', 'lipsește'],
-  },
-  {
-    key: 'community',
-    label: 'Comunitate',
-    tokens: ['comunitate', 'colegi', 'grup', 'social', 'oameni'],
-    positive: ['deschisă', 'prietenos', 'solidară', 'caldă', 'activă'],
-    negative: ['rece', 'izolată', 'tensionată', 'distantă', 'închisă'],
-  },
-]
-
+// ── Mapări sentiment → clase CSS existente în styles.css ────────────────────────
 const sentimentMeta = {
-  pozitiv: {
-    label: 'Pozitiv',
-    className: 'is-positive',
-    summary: 'Textul transmite o experiență bună și un ton favorabil.',
-  },
-  negativ: {
-    label: 'Negativ',
-    className: 'is-negative',
-    summary: 'Textul sugerează probleme, frustrare sau neclaritate.',
-  },
-  neutru: {
-    label: 'Neutru',
-    className: 'is-neutral',
-    summary: 'Textul este echilibrat sau nu oferă destule indicii clare.',
-  },
+  Positive: { label: 'Pozitiv', className: 'is-positive', ro: 'pozitiv' },
+  Negative: { label: 'Negativ', className: 'is-negative', ro: 'negativ' },
+  Neutral:  { label: 'Neutru',  className: 'is-neutral',  ro: 'neutru'  },
+  Mixed:    { label: 'Mixt',    className: 'is-neutral',  ro: 'neutru'  },
 }
 
 const sampleReviews = [
   'Antrenorii sunt foarte implicați, echipamentele sunt noi, iar atmosfera este caldă și motivantă.',
-  'Sala este curată, dar uneori trainerii răspund greu și comunitatea pare mai degrabă rece.',
-  'Este o sală decentă, fără probleme majore, cu o experiență echilibrată pentru majoritatea oamenilor.',
+  'Sala este curată, dar este extrem de aglomerată seara și nu găsești niciun aparat liber.',
+  'Prețul abonamentului e OK, programul e flexibil, dar vestiarele lasă de dorit.',
 ]
-
-const genericPositive = ['rapid', 'excelent', 'util', 'clar', 'bun', 'super', 'ușor', 'prietenos', 'solid', 'plăcut']
-const genericNegative = ['prost', 'lent', 'confuz', 'greu', 'slab', 'problemă', 'eroare', 'defect', 'neclar', 'rece']
-
-function countMatches(text, tokens) {
-  return tokens.reduce((count, token) => count + (text.includes(token) ? 1 : 0), 0)
-}
-
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value))
-}
-
-function toneFromScore(score) {
-  if (score >= 72) return 'pozitiv'
-  if (score <= 48) return 'negativ'
-  return 'neutru'
-}
-
-function classifyAspect(normalized, aspect) {
-  const mentionHits = countMatches(normalized, aspect.tokens)
-  const positiveHits = countMatches(normalized, [...genericPositive, ...aspect.positive])
-  const negativeHits = countMatches(normalized, [...genericNegative, ...aspect.negative])
-
-  let sentiment = 'neutru'
-  let summary = 'Nu apar suficiente indicii pentru o concluzie clară.'
-
-  if (mentionHits > 0 && positiveHits > negativeHits) {
-    sentiment = 'pozitiv'
-    summary = `Aspectul ${aspect.label.toLowerCase()} este descris favorabil.`
-  } else if (mentionHits > 0 && negativeHits > positiveHits) {
-    sentiment = 'negativ'
-    summary = `Aspectul ${aspect.label.toLowerCase()} este descris cu semne de risc.`
-  } else if (mentionHits > 0) {
-    summary = `Aspectul ${aspect.label.toLowerCase()} este menționat, dar tonul rămâne echilibrat.`
-  }
-
-  return {
-    label: aspect.label,
-    sentiment,
-    summary,
-  }
-}
-
-function buildScore(text) {
-  const normalized = text.toLowerCase()
-  const positiveHits = countMatches(normalized, genericPositive)
-  const negativeHits = countMatches(normalized, genericNegative)
-  const aspectDetails = aspectDefinitions.map((aspect) => classifyAspect(normalized, aspect))
-  const positiveAspects = aspectDetails.filter((item) => item.sentiment === 'pozitiv').length
-  const negativeAspects = aspectDetails.filter((item) => item.sentiment === 'negativ').length
-  const neutralAspects = aspectDetails.length - positiveAspects - negativeAspects
-
-  let score = 64 + positiveHits * 8 + positiveAspects * 6 + neutralAspects * 2 - negativeHits * 9 - negativeAspects * 7
-  if (normalized.length > 220) score += 4
-  if (/[!?]/.test(text)) score += 2
-  score = clamp(Math.round(score), 0, 100)
-
-  const overallTone = toneFromScore(score)
-  const title = score >= 80 ? 'Recenzie foarte bună' : score >= 60 ? 'Recenzie echilibrată' : 'Recenzie de investigat'
-  const description =
-    score >= 80
-      ? 'Textul transmite feedback pozitiv și are suficiente indicii de claritate și utilitate.'
-      : score >= 60
-      ? 'Textul este mixt sau neutru. Se văd câteva puncte bune, dar și zone de rafinat.'
-      : 'Textul indică probleme sau ambiguități și merită o revizuire suplimentară.'
-
-  return {
-    score,
-    overallTone,
-    title,
-    description,
-    aspectDetails,
-    sentimentSummary: {
-      pozitiv: positiveAspects,
-      negativ: negativeAspects,
-      neutru: neutralAspects,
-    },
-  }
-}
-
-function createMockAnalysis(text) {
-  const normalized = text.toLowerCase()
-  return new Promise((resolve, reject) => {
-    window.setTimeout(() => {
-      if (/eroare api|fail api|api error|crash/.test(normalized)) {
-        reject(new Error('API-ul mock a returnat o eroare.'))
-        return
-      }
-      resolve(buildScore(text))
-    }, MOCK_LATENCY_MS)
-  })
-}
-
-function withTimeout(promise, timeoutMs) {
-  return new Promise((resolve, reject) => {
-    const id = window.setTimeout(() => reject(new Error('API-ul nu a răspuns în timp util. Te rugăm să încerci din nou.')), timeoutMs)
-    promise.then(
-      (v) => {
-        window.clearTimeout(id)
-        resolve(v)
-      },
-      (err) => {
-        window.clearTimeout(id)
-        reject(err)
-      },
-    )
-  })
-}
 
 export default function App() {
   const [text, setText] = useState(sampleReviews[0])
-  const [score, setScore] = useState(null)
-  const [overallTone, setOverallTone] = useState('neutru')
-  const [title, setTitle] = useState('Așteptând analiza')
-  const [description, setDescription] = useState('Rezultatul va afișa principalele aspecte detectate din recenzia sălii și o evaluare sintetică.')
-  const [aspectDetails, setAspectDetails] = useState([])
-  const [sentimentSummary, setSentimentSummary] = useState({ pozitiv: 0, negativ: 0, neutru: 0 })
-  const [status, setStatus] = useState({ kind: 'idle', message: 'Introdu o recenzie și apasă Analizează.' })
-  const [analysisNote, setAnalysisNote] = useState('Introduceți o recenzie de sală ca să obțineți scor și tag-uri.')
+  const [result, setResult] = useState(null)
+  const [aspectsStats, setAspectsStats] = useState([])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [statusMsg, setStatusMsg] = useState('Introdu o recenzie și apasă Analizează.')
+
+  // Încarcă statisticile reale din corpus la pornire
+  useEffect(() => {
+    fetch(`${API_URL}/aspects`)
+      .then(r => r.json())
+      .then(data => setAspectsStats(data.aspects || []))
+      .catch(() => {
+        // serverul nu e pornit încă — nu crapa, statisticile rămân goale
+      })
+  }, [])
 
   async function analyze() {
-    if (loading) return
-    const t = text.trim()
-    if (!t) {
-      setScore(null)
-      setOverallTone('neutru')
-      setTitle('Așteptând analiza')
-      setDescription('Introduceți o recenzie de sală ca să obțineți scor și aspecte analizate.')
-      setAspectDetails([])
-      setSentimentSummary({ pozitiv: 0, negativ: 0, neutru: 0 })
-      setAnalysisNote('Scrieți o recenzie și apăsați Analizează.')
-      setStatus({ kind: 'idle', message: 'Introdu o recenzie și apasă Analizează.' })
-      return
-    }
-
+    if (loading || !text.trim()) return
     setLoading(true)
-    setStatus({ kind: 'loading', message: 'Se analizează...' })
-    setAnalysisNote('Se analizează...')
-    setTitle('Analiză în curs')
-    setDescription('Mock API-ul procesează textul și pregătește rezultatul.')
-    setOverallTone('neutru')
-    setAspectDetails([])
+    setError(null)
+    setResult(null)
+    setStatusMsg('Se analizează...')
 
     try {
-      const outcome = await withTimeout(createMockAnalysis(t), MOCK_TIMEOUT_MS)
-      setScore(outcome.score)
-      setOverallTone(outcome.overallTone)
-      setTitle(outcome.title)
-      setDescription(outcome.description)
-      setAspectDetails(outcome.aspectDetails)
-      setSentimentSummary(outcome.sentimentSummary)
-      setStatus({ kind: 'success', message: `Analiză finalizată pentru ${t.length} caractere.` })
-      setAnalysisNote(`Analiză rulată pentru ${t.length} caractere.`)
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Eroare la analiză.'
-      setScore(null)
-      setOverallTone('negativ')
-      setTitle('Analiza nu a reușit')
-      setDescription(msg)
-      setAspectDetails([])
-      setSentimentSummary({ pozitiv: 0, negativ: 0, neutru: 0 })
-      setStatus({ kind: 'error', message: msg })
-      setAnalysisNote('Reîncercați analiza după ce API-ul revine.')
+      const resp = await fetch(`${API_URL}/analyze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text.trim() }),
+      })
+      if (!resp.ok) {
+        const err = await resp.json()
+        throw new Error(err.detail || 'Eroare server')
+      }
+      const data = await resp.json()
+      setResult(data)
+      setStatusMsg(`Analiză finalizată — ${data.aspects_found} aspect${data.aspects_found !== 1 ? 'e' : ''} detectat${data.aspects_found !== 1 ? 'e' : ''}.`)
+    } catch (e) {
+      const msg = e.message || 'Nu s-a putut conecta la API. Asigură-te că serverul rulează pe portul 8000.'
+      setError(msg)
+      setStatusMsg('Analiza nu a reușit.')
     } finally {
       setLoading(false)
     }
   }
 
-  const maxValue = Math.max(...mockStats.map((s) => s.value), 100)
-  const statusTone = loading ? 'loading' : status.kind === 'error' ? 'error' : status.kind === 'success' ? 'success' : 'idle'
+  // ── Date derivate ────────────────────────────────────────────────────────────
+  const overallMeta = result
+    ? (sentimentMeta[result.overall_sentiment] || sentimentMeta.Neutral)
+    : null
+
+  const sentimentCounts = result
+    ? {
+        Positive: result.aspects.filter(a => a.sentiment === 'Positive').length,
+        Negative: result.aspects.filter(a => a.sentiment === 'Negative').length,
+        Neutral:  result.aspects.filter(a => a.sentiment === 'Neutral').length,
+      }
+    : { Positive: 0, Negative: 0, Neutral: 0 }
+
+  const maxTotal = aspectsStats.length
+    ? Math.max(...aspectsStats.map(a => a.stats.total))
+    : 1
+
+  const statusTone = loading ? 'loading' : error ? 'error' : result ? 'success' : 'idle'
 
   return (
     <div className="page-shell">
       <div className="bg-orb bg-orb-one" aria-hidden="true" />
       <div className="bg-orb bg-orb-two" aria-hidden="true" />
 
+      {/* ── HEADER ─────────────────────────────────────────────────────────── */}
       <header className="hero card">
         <div className="hero-copy">
           <p className="eyebrow">Recenzie Radar</p>
           <h1>Analizează recenzii pentru sălile de fitness</h1>
-          <p className="subtitle">Interfață completă, bazată pe date mock: scor general, sentimente pe fiecare aspect și feedback vizual clar pentru pozitiv, negativ și neutru.</p>
+          <p className="subtitle">
+            Introdu o recenzie și obții instant aspectele detectate cu sentimentul fiecăruia —
+            antrenori, echipamente, atmosferă și altele. Powered by LLaMA 3.3 70B via Groq.
+          </p>
         </div>
 
         <div className="hero-aside">
@@ -275,134 +109,211 @@ export default function App() {
           </div>
           <div className="legend-card card-soft">
             <span className="legend-title">Stare curentă</span>
-            <p className={`hero-status ${statusTone === 'error' ? 'is-error' : statusTone === 'success' ? 'is-success' : statusTone === 'loading' ? 'is-loading' : ''}`}>
-              {loading ? 'Se analizează...' : status.message}
+            <p className={`hero-status${statusTone === 'error' ? ' is-error' : statusTone === 'success' ? ' is-success' : statusTone === 'loading' ? ' is-loading' : ''}`}>
+              {statusMsg}
             </p>
           </div>
         </div>
       </header>
 
+      {/* ── DASHBOARD ──────────────────────────────────────────────────────── */}
       <section className="dashboard-grid">
+
+        {/* INPUT */}
         <article className="card panel input-panel">
           <div className="section-head">
             <div>
-              <p className="section-label">Intrare mock</p>
+              <p className="section-label">Intrare</p>
               <h2>Scrie o recenzie</h2>
             </div>
-            <span className="hint">Mock async</span>
+            <span className="hint">{text.length} / 2000 caractere</span>
           </div>
 
           <label className="sr-only" htmlFor="reviewInput">Scrie o recenzie pentru sală</label>
-          <textarea id="reviewInput" rows={8} value={text} onChange={(e) => setText(e.target.value)} placeholder="Ex.: Antrenorul este implicat, echipamentele sunt moderne, atmosfera e motivantă." />
+          <textarea
+            id="reviewInput"
+            rows={8}
+            value={text}
+            onChange={e => setText(e.target.value)}
+            placeholder="Ex.: Antrenorul este implicat, echipamentele sunt moderne, atmosfera e motivantă."
+            maxLength={2000}
+          />
 
           <div className="sample-row" aria-label="Exemple rapide">
-            {sampleReviews.map((sample, index) => (
-              <button key={index} type="button" className="sample-pill" onClick={() => setText(sample)}>
-                Exemplu {index + 1}
+            {sampleReviews.map((sample, i) => (
+              <button key={i} type="button" className="sample-pill" onClick={() => setText(sample)}>
+                Exemplu {i + 1}
               </button>
             ))}
           </div>
 
           <div className="actions">
-            <button onClick={analyze} disabled={loading} aria-busy={loading}>{loading ? 'Se analizează...' : 'Analizează'}</button>
-            <p className="analysis-note">{analysisNote}</p>
+            <button onClick={analyze} disabled={loading || !text.trim()} aria-busy={loading}>
+              {loading ? 'Se analizează...' : 'Analizează'}
+            </button>
+            {loading && <p className="analysis-note">Modelul procesează recenzia...</p>}
           </div>
         </article>
 
-        <article className={`card panel result-panel is-${overallTone}`} aria-live="polite" aria-busy={loading}>
+        {/* REZULTAT */}
+        <article
+          className={`card panel result-panel is-${overallMeta ? overallMeta.ro : 'neutru'}`}
+          aria-live="polite"
+          aria-busy={loading}
+        >
           <div className="section-head">
             <div>
               <p className="section-label">Rezultat</p>
               <h2>Sentiment general</h2>
             </div>
-            <span className={`tone-chip ${sentimentMeta[overallTone].className}`}>{sentimentMeta[overallTone].label}</span>
-          </div>
-
-          <div className={`score-ring is-${overallTone}`} aria-label="Scor general">
-            <div>
-              <span id="scoreValue">{score ?? '--'}</span>
-              <small>Scor general</small>
-            </div>
-          </div>
-
-          <div className={`status-message is-${statusTone}`}>
-            {loading ? (
-              <>
-                <span className="loading-spinner" aria-hidden="true" />
-                <span>Se analizează...</span>
-              </>
-            ) : (
-              <span>{status.message}</span>
+            {overallMeta && (
+              <span className={`tone-chip ${overallMeta.className}`}>{overallMeta.label}</span>
             )}
           </div>
 
-          <div className="result-copy">
-            <p className="result-title">{title}</p>
-            <p className="result-description">{description}</p>
-          </div>
-
-          <div className="summary-grid">
-            {Object.entries(sentimentSummary).map(([tone, count]) => (
-              <div key={tone} className={`summary-card ${sentimentMeta[tone].className}`}>
-                <strong>{count}</strong>
-                <span>{sentimentMeta[tone].label}</span>
-              </div>
-            ))}
-          </div>
-
-          <div>
-            <p className="mini-label">Sentiment pe aspecte</p>
-            <div className="aspect-list">
-              {aspectDetails.length ? aspectDetails.map((item) => (
-                <article key={item.label} className="aspect-card">
-                  <div className="aspect-card-head">
-                    <strong>{item.label}</strong>
-                    <span className={`tone-chip ${sentimentMeta[item.sentiment].className}`}>{sentimentMeta[item.sentiment].label}</span>
-                  </div>
-                  <p>{item.summary}</p>
-                </article>
-              )) : (
-                <article className="aspect-card aspect-empty">
-                  <strong>Fără analiză încă</strong>
-                  <p>{loading ? 'Așteaptă finalizarea analizei mock.' : 'Apasă Analizează pentru a vedea sentimentele pe fiecare aspect.'}</p>
-                </article>
-              )}
+          {/* Cerc cu numărul de aspecte găsite */}
+          <div className={`score-ring is-${overallMeta ? overallMeta.ro : 'neutru'}`} aria-label="Aspecte găsite">
+            <div>
+              <span id="scoreValue">{result ? result.aspects_found : '--'}</span>
+              <small>{result ? 'aspecte' : 'scor'}</small>
             </div>
           </div>
+
+          {/* Loading */}
+          {loading && (
+            <div className="status-message is-loading">
+              <span className="loading-spinner" aria-hidden="true" />
+              <span>Se analizează...</span>
+            </div>
+          )}
+
+          {/* Eroare */}
+          {error && !loading && (
+            <div className="status-message is-error">
+              <span>⚠ {error}</span>
+            </div>
+          )}
+
+          {/* Rezultate reale */}
+          {result && !loading && (
+            <>
+              <div className="result-copy">
+                <p className="result-title">
+                  {result.dominant_aspect
+                    ? `Aspect dominant: ${result.dominant_aspect}`
+                    : 'Analiză completă'}
+                </p>
+                <p className="result-description">
+                  {result.aspects_found} aspect{result.aspects_found !== 1 ? 'e' : ''} detectat{result.aspects_found !== 1 ? 'e' : ''} în recenzie.
+                </p>
+              </div>
+
+              <div className="summary-grid">
+                {[
+                  ['Positive', 'Pozitiv'],
+                  ['Negative', 'Negativ'],
+                  ['Neutral',  'Neutru'],
+                ].map(([key, label]) => (
+                  <div key={key} className={`summary-card ${sentimentMeta[key].className}`}>
+                    <strong>{sentimentCounts[key]}</strong>
+                    <span>{label}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div>
+                <p className="mini-label">Sentiment pe aspecte</p>
+                <div className="aspect-list">
+                  {result.aspects.length ? result.aspects.map(a => {
+                    const m = sentimentMeta[a.sentiment] || sentimentMeta.Neutral
+                    return (
+                      <article key={a.aspect} className="aspect-card">
+                        <div className="aspect-card-head">
+                          <strong>{a.label}</strong>
+                          <span className={`tone-chip ${m.className}`}>{m.label}</span>
+                        </div>
+                        {a.evidence && (
+                          <p>"{a.evidence}"</p>
+                        )}
+                      </article>
+                    )
+                  }) : (
+                    <article className="aspect-card aspect-empty">
+                      <strong>Niciun aspect detectat</strong>
+                      <p>Recenzia nu conține aspecte clare din cele 7 categorii.</p>
+                    </article>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Stare inițială */}
+          {!result && !loading && !error && (
+            <div className="result-copy">
+              <p className="result-title">Așteptând analiza</p>
+              <p className="result-description">
+                Introdu o recenzie și apasă Analizează pentru a vedea aspectele detectate și sentimentul lor.
+              </p>
+            </div>
+          )}
         </article>
       </section>
 
+      {/* ── STATISTICI CORPUS REAL ──────────────────────────────────────────── */}
       <section className="card panel stats-panel">
         <div className="section-head">
           <div>
-            <p className="section-label">Mock dataset</p>
+            <p className="section-label">Corpus — 1000 recenzii Iași</p>
             <h2>Statistici din dataset</h2>
           </div>
-          <span className="hint">Bar chart</span>
+          <span className="hint">Date reale</span>
         </div>
 
-        <div className="stats-layout">
-          <div>
-            <p className="stats-copy">Bar chart simplu generat din date mock. Secțiunea arată distribuția aspectelor și completează analiza vizuală fără să depindă de un API real.</p>
-            <div className="stats-meta">
-              {mockStats.map((s, idx) => (
-                <div key={idx} className="meta-row">
-                  <strong>{s.aspect}</strong>
-                  <span>{s.value}%</span>
-                </div>
-              ))}
+        {aspectsStats.length > 0 ? (
+          <div className="stats-layout">
+            <div>
+              <p className="stats-copy">
+                Distribuția mențiunilor per aspect din cele 1000 de recenzii procesate.
+                Înălțimea barei reprezintă numărul total de mențiuni, culoarea arată procentul pozitiv.
+              </p>
+              <div className="stats-meta">
+                {aspectsStats.map(a => (
+                  <div key={a.id} className="meta-row">
+                    <strong>{a.label}</strong>
+                    <span style={{ color: a.stats.pos_pct >= 70 ? 'var(--positive-text)' : a.stats.neg_pct >= 30 ? 'var(--negative-text)' : 'var(--muted)' }}>
+                      {a.stats.pos_pct}% pozitiv · {a.stats.total} mențiuni
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="chart" aria-label="Grafic statistici corpus">
+              {aspectsStats.map(a => {
+                const barValue = Math.round((a.stats.total / maxTotal) * 100)
+                return (
+                  <div className="bar-card" key={a.id}>
+                    <div
+                      className="bar-track"
+                      style={{ '--value': barValue }}
+                      data-value={a.stats.total}
+                    />
+                    <div className="bar-label">
+                      <strong>{a.label}</strong>
+                      <span>{a.stats.pos_pct}% poz.</span>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
-
-          <div className="chart" aria-label="Grafic cu statistici">
-            {mockStats.map((item, idx) => (
-              <div className="bar-card" key={idx}>
-                <div className="bar-track" style={{ ['--value']: Math.round((item.value / maxValue) * 100) }} data-value={item.value}></div>
-                <div className="bar-label"><strong>{item.aspect}</strong><span>{item.note}</span></div>
-              </div>
-            ))}
-          </div>
-        </div>
+        ) : (
+          <p style={{ color: 'var(--muted)', margin: 0, lineHeight: 1.7 }}>
+            Pornește serverul backend (<code>python -m uvicorn main:app --reload</code> din folderul <code>backend/</code>)
+            pentru a vedea statisticile reale din corpus.
+          </p>
+        )}
       </section>
     </div>
   )
